@@ -4,18 +4,26 @@ import 'package:uahep/bloc/griv_bloc.dart';
 import 'package:uahep/utils/validator.dart';
 
 class AddForm extends StatefulWidget {
+  final GrivBloc grivBloc;
+  final Griv griv;
+  AddForm({this.grivBloc, this.griv});
+
   @override
   _AddFormState createState() => _AddFormState();
 }
 
 class _AddFormState extends State<AddForm> {
   GlobalKey<FormState> _formKey = GlobalKey();
-  Griv _griv = Griv();
-  final GrivBloc grivBloc = GrivBloc();
+  Griv _griv;
 
   @override
   void initState() {
     super.initState();
+    if (widget.griv == null) {
+      _griv = Griv();
+    } else {
+      _griv = widget.griv;
+    }
   }
 
   @override
@@ -33,6 +41,7 @@ class _AddFormState extends State<AddForm> {
           height: 20,
         ),
         TextFormField(
+          initialValue: _griv.title,
           onSaved: (value) {
             this._griv.title = value;
           },
@@ -43,6 +52,7 @@ class _AddFormState extends State<AddForm> {
           height: 20,
         ),
         TextFormField(
+          initialValue: _griv.desc,
           onSaved: (value) {
             this._griv.desc = value;
           },
@@ -53,10 +63,14 @@ class _AddFormState extends State<AddForm> {
           height: 20,
         ),
         RaisedButton(
-          onPressed: () {
+          onPressed: () async {
             if (_formKey.currentState.validate()) {
               _formKey.currentState.save();
-              grivBloc.addGriv(this._griv);
+              if (this._griv.id == null) {
+                await widget.grivBloc.addGriv(this._griv);
+              } else {
+                await widget.grivBloc.updateGriv(this._griv);
+              }
               Navigator.pop(context);
             }
           },

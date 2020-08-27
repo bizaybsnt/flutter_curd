@@ -1,10 +1,10 @@
+import 'package:uahep/bloc/base_bloc.dart';
 import 'package:uahep/model/griv.dart';
 import 'package:uahep/repository/griv_repository.dart';
 
-
 import 'dart:async';
 
-class GrivBloc {
+class GrivBloc extends BaseBloc {
   final _grivRepository = GrivRepository();
 
   //Stream controller is the 'Admin' that manages
@@ -26,6 +26,7 @@ class GrivBloc {
   }
 
   addGriv(Griv griv) async {
+    print('here');
     await _grivRepository.insertGriv(griv);
     getGrivs();
   }
@@ -40,7 +41,8 @@ class GrivBloc {
     getGrivs();
   }
 
-  dispose() {
+  @override
+  void onDispose() {
     _grivController.close();
   }
 }

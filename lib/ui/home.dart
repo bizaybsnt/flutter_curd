@@ -20,6 +20,8 @@ class _HomePageState extends State<HomePage> {
   }
 
   _onLogoutClick() async {
+    print(Provider.of<AuthenticationBloc>(context));
+    print(context);
     await Provider.of<AuthenticationBloc>(context).logout();
   }
 
@@ -48,8 +50,8 @@ class _HomePageState extends State<HomePage> {
       ),
       body: Center(child: Container(child: getGrivWidget())),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => Navigator.of(context)
-            .push(MaterialPageRoute(builder: (_) => AddForm())),
+        onPressed: () => Navigator.push(context,
+            MaterialPageRoute(builder: (_) => AddForm(grivBloc: grivBloc))),
         tooltip: 'Add List',
         child: Icon(Icons.add),
       ),
@@ -124,6 +126,11 @@ class _HomePageState extends State<HomePage> {
                             fontWeight: FontWeight.w300,
                           ),
                         ),
+                        onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) =>
+                                    AddForm(grivBloc: grivBloc, griv: griv))),
                       )),
                 );
                 return dismissibleCard;
